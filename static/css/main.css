@@ -30,7 +30,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 #cart-icon{
-	width:25px;
+	width:25px !important;
 	display: inline-block;
 	margin-left: 15px;
 }
@@ -41,11 +41,12 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .btn{
-	border-radius: 0;
+	border-radius: 5px;
 }
 
 .row-image{
-	width: 100px;
+	width: 120px !important;
+	height: 80px;
 }
 
 .form-field{
@@ -56,7 +57,7 @@ h1,h2,h3,h4,h5,h6{
 
 .cart-row{
 	display: flex;
-    align-items: flex-stretch;
+    align-items: flex-start;
     padding-bottom: 10px;
     margin-bottom: 10px;
     border-bottom: 1px solid #ececec;
@@ -86,4 +87,17 @@ h1,h2,h3,h4,h5,h6{
 
 .hidden{
 	display: none!important;
+}
+
+.nameField{
+	margin-left: 10px;
+}
+.priceField{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.hello-msg{
+	margin-right: 10px;
+	margin-top: 10px !important;
+	text-decoration: underline;
 }
