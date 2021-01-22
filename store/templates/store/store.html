@@ -17,7 +17,7 @@
     <hr>
     <br>
     <div class="row">
-    {% for product in products %}
+    {% for product in page_obj %}
 		<div class="col-lg-4">
 			<img class="thumbnail" src="{{ product.imageURL }}">
 			<div class="box-element product">
@@ -33,6 +33,33 @@
 			</div>
 		</div>
     {% endfor %}
-
 	</div>
+    <div class="pagination-container">
+              <ul style="padding-left: 1080px; margin-top: 20px" class="pagination">
+                  {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a  class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{page_obj.previous_page_number}}</a></li>
+                  {% else %}
+                      <li class="page-item disabled">
+                          <span class="page-link">Previous</span>
+                        </li>
+                  {% endif %}
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">{{ page_obj.number }}</span>
+                </li>
+              {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                  {% else %}
+                      <li class="page-item disabled">
+                          <span class="page-link">Next</span>
+                        </li>
+                  {% endif %}
+              </ul>
+            </div>
+    <hr>
 {% endblock content %}

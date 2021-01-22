@@ -1,5 +1,6 @@
 from random import randint
 
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from .models import *
 from .filters import ProductFilter
@@ -66,7 +67,12 @@ def store(request):
     myFilter = ProductFilter(request.GET, queryset=products)
     products = myFilter.qs
 
+    paginator = Paginator(products, 6)
+    page_number = request.GET.get('page')
+    page_obj = Paginator.get_page(paginator, page_number)
+
     context = {
+        'page_obj': page_obj,
         'products': products,
         'myFilter': myFilter,
     }
