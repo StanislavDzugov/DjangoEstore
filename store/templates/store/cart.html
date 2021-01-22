@@ -46,7 +46,7 @@
                             {% csrf_token %}
                             <p class="quantity">{{ item.quantity }}</p>
                             <input hidden type="text" value="{{ item.product.id }}" name="product">
-                            <input type="submit"  class="btn btn-sm btn-info" value="+" name="+">
+                            <input type="submit"  class="btn btn-sm btn-success" value="+" name="+">
                             <input type="submit"  class="btn btn-sm btn-danger" value="-" name="-">
                         </form>
 					</div>
