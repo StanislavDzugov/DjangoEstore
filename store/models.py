@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Create your models here.
 from django.urls import reverse
 
@@ -20,6 +19,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name_plural = 'Categories'
 
 
 class Product(models.Model):
