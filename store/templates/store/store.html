@@ -2,16 +2,19 @@
 {% load static %}
 {% block content %}
     <br>
-        <div class="row">
-            <div class="col">
-                <div class="card card-body">
+    <hr>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
                     <form method="get">
                         {{ myFilter.form }}
                     <button class="btn btn-primary" type="submit">Search</button>
-                  </form>
+                    </form>
                 </div>
+            <div class="col">
+                    <a style="margin-left: 480px" href="{% url 'cart' %}" class="btn btn-primary">Go to Cart</a>
             </div>
         </div>
+    <hr>
     <br>
     <div class="row">
     {% for product in products %}
