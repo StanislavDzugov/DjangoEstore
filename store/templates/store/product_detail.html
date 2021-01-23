@@ -1,0 +1,65 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+    <section class="mb-5">
+    {% include 'store/messages.html' %}
+    <a  class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+                <hr>
+    <div style="margin-top: 50px" class="row">
+    <div class="col-md-6 mb-4 mb-md-0">
+
+      <div id="mdb-lightbox-ui"></div>
+
+        <div class="row product-gallery mx-1">
+            <figure class="view overlay rounded z-depth-1 main-img">
+                <img style="border: 2px solid #212121;" src="{{ product.imageURL }}"
+                  class="img-fluid z-depth-1">
+              </a>
+            </figure>
+        </div>
+
+
+    </div>
+    <div class="col-md-6">
+    <div style="padding-left: 10px" class="container">
+        <div class="row">
+            <div style="width: 470px; padding-left: 1px" class="col-ms-4">
+                <h5>{{ product.name }}</h5>
+            </div>
+            <div style="width: 150px" class="col-ms-4">
+                {% if user.is_authenticated %}
+                    <form action="{% url 'product-details' product.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-md mr-1 mb-2">Add to Cart</button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-md mr-1 mb-2">Add to Cart</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+      <div class="table-responsive">
+        <table class="table table-sm table-borderless mb-0">
+          <tbody>
+            <tr>
+              <th class="pl-0 w-25" scope="row"><strong>Category</strong></th>
+              <td>{{ product.category }}</td>
+            </tr>
+            <tr>
+              <th class="pl-0 w-25" scope="row"><strong>Price</strong></th>
+              <td>${{ product.price}}</td>
+            </tr>
+            <tr>
+              <th class="pl-0 w-25" scope="row"><strong>Description</strong></th>
+              <td>{{ product.description }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+         <hr>
+    </div>
+  </div>
+
+</section>
+{% endblock content %}

@@ -1,5 +1,3 @@
-from random import randint
-
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from .models import *
@@ -8,7 +6,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
-import json
 
 
 # Create your views here.
@@ -129,3 +126,22 @@ def checkout(request):
         'cart_items': cart_items
     }
     return render(request, 'store/checkout.html', context)
+
+
+def product_details(request, pk):
+    product = Product.objects.get(pk=pk)
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            customer = request.user.customer
+            order, created = Order.objects.get_or_create(customer=customer, complete=False)
+            order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
+            if not created:
+                order_item.quantity += 1
+            else:
+                order_item.quantity = 1
+            order_item.save()
+            messages.success(request, 'Product added to cart successfully')
+
+    context = {'product': product}
+
+    return render(request, 'store/product_detail.html', context)

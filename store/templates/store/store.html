@@ -23,13 +23,26 @@
 			<div class="box-element product">
 				<h6><strong>{{ product.name }}</strong></h6>
 				<hr>
-                <h4 style="display: inline-block; float: right"><strong>$
-                {{ product.price|floatformat:2 }}</strong></h4>
-                <form action="" method="POST">
+                <div style="padding-left: 1px; padding-right: 1px" class="container">
+                  <div class="row">
+                    <div style="width: 120px" class="col-sm-4">
+                      <form action="" method="POST">
                     {% csrf_token %}
                     <input hidden type="text" value="{{ product.id }}" name="product">
                     <input type="submit"  class="btn btn-outline-secondary add-btn" value="Add to Cart">
-                </form>
+                    </form>
+                    </div>
+                    <div style="width: 165px" class="col-sm-5">
+                      <a href="{% url 'product-details' product.pk %}" class="btn btn-outline-secondary add-btn">
+                    Product Details
+                        </a>
+                    </div>
+                    <div style="width: 125px; padding-left: 1px; margin-left: 1px" class="col-sm-4">
+                      <h4 style="display: inline-block; float: right"><strong>$
+                    {{ product.price|floatformat:2 }}</strong></h4>
+                    </div>
+                  </div>
+                </div>
 			</div>
 		</div>
     {% endfor %}
