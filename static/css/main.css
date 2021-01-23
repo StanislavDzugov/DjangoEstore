@@ -26,7 +26,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .bg-dark{
-	background-color: darkgrey!important;
+	background-color: #212121!important;
 }
 
 #cart-icon{
@@ -97,7 +97,8 @@ h1,h2,h3,h4,h5,h6{
 	margin-right: 10px;
 }
 .hello-msg{
+	font-size: 16px;
+	color: white;
 	margin-right: 10px;
-	margin-top: 10px !important;
 	text-decoration: underline;
 }

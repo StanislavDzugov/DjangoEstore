@@ -20,7 +20,7 @@
 			width: 350px;
 			margin-top: auto;
 			margin-bottom: auto;
-			background: darkgrey;
+			background: #212121;
 			position: relative;
 			display: flex;
 			justify-content: center;
@@ -30,6 +30,7 @@
 			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 			border-radius: 5px;
+
 
 		}
 
@@ -44,7 +45,7 @@
 
 		.login_btn {
 			width: 100%;
-			background: #FFBE33 !important;
+			background: #0275d8 !important;
 			color: white !important;
 		}
 		.login_btn:focus {
@@ -55,7 +56,7 @@
 			padding: 0 2rem;
 		}
 		.input-group-text {
-			background: #f7ba5b !important;
+			background: #0275d8 !important;
 			color: white !important;
 			border: 0 !important;
 			border-radius: 0.25rem 0 0 0.25rem !important;
@@ -110,7 +111,7 @@
                     <p id="messages">{{ message }}</p>
                 {% endfor %}
 				<div class="mt-4">
-					<div class="d-flex justify-content-center links">
+					<div style="color: white" class="d-flex justify-content-center links">
 						Don't have an account? <a href="{% url 'register' %}" class="ml-2">Sign Up</a>
 					</div>
 

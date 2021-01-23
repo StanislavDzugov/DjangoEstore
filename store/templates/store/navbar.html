@@ -6,12 +6,12 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-      <div class="form-inline my-2 my-lg-0">
+      <div class="content">
           {% if request.user.is_authenticated %}
-                <span class="hello-msg">Hello, {{ request.user }} </span>
-                <a href="{% url 'logout' %}" class="btn btn-warning">Logout</a>
+                <span  class="hello-msg">Hello, {{ request.user }} </span>
+                <a style="font-size: 16px; padding-top: 5px; margin-bottom: 5px" href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
           {% else %}
-                <a href="{% url 'login' %}" class="btn btn-warning">Login</a>
+                <a style="font-size: 16px; padding-top: 5px; margin-bottom: 5px" href="{% url 'login' %}" class="btn btn-primary">Login</a>
           {% endif %}
           <a href="{% url 'cart' %}">
               <img alt='cart' id="cart-icon" src="{% static 'images/cart.png' %}">
