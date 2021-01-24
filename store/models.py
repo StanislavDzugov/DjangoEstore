@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 from django.urls import reverse
+ORDER_OPTIONS = [('Not Paid', 'Not Paid'),
+                 ('Paid', 'Paid'),
+                 ('Delivered', 'Delivered')]
 
 
 class Customer(models.Model):
@@ -47,8 +50,7 @@ class Product(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
-    complete = models.BooleanField(default=False)
-    transaction_id = models.CharField(max_length=100, null=True)
+    status = models.CharField(max_length=250, choices=ORDER_OPTIONS, default='Not Paid')
 
     def __str__(self):
         return str(self.id)
@@ -90,6 +92,7 @@ class OrderItem(models.Model):
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    country = models.CharField(max_length=200, null=True)
     address = models.CharField(max_length=200, null=False)
     city = models.CharField(max_length=200, null=False)
     postcode = models.CharField(max_length=200, null=False)
