@@ -133,4 +133,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-
+STRIPE_PUBLISHABLE_KEY = 'Put your key'
+STRIPE_SECRET_KEY = 'Put your key'

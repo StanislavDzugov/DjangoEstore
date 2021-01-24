@@ -1,11 +1,16 @@
 from django.core.paginator import Paginator
+from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+
+from djangoEshop import settings
 from .models import *
 from .filters import ProductFilter
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
+import stripe
 
 
 # Create your views here.
@@ -48,7 +53,7 @@ def store(request):
             id = request.POST.get('product')
             product = Product.objects.get(id=id)
             customer = request.user.customer
-            order, created = Order.objects.get_or_create(customer=customer, complete=False)
+            order, created = Order.objects.get_or_create(customer=customer, status='Not Paid')
             order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
             if not created:
                 order_item.quantity += 1
@@ -80,7 +85,7 @@ def store(request):
 @login_required(login_url='login')
 def cart(request):
     customer = request.user.customer
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    order, created = Order.objects.get_or_create(customer=customer, status='Not Paid')
     items = order.orderitem_set.all()
     if request.method == 'POST':
         if request.POST.get('delete'):
@@ -109,16 +114,25 @@ def cart(request):
 @login_required(login_url='login')
 def checkout(request):
     customer = request.user.customer
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    order, created = Order.objects.get_or_create(customer=customer, status='Not Paid')
     items = order.orderitem_set.all()
     cart_items = order.get_cart_items_quantity
     if request.method == 'POST':
-        shipping_address = ShippingAddress.objects.create(customer=customer,
-                                                          order=order,
-                                                          address=request.POST.get('address'),
-                                                          city=request.POST.get('city'),
-                                                          postcode=request.POST.get('postcode'))
-        shipping_address.save()
+        shipping_address = ShippingAddress.objects.update_or_create(customer=customer,
+                                                                    order=order,
+                                                                    defaults={
+                                                                        'country': request.POST.get('country'),
+                                                                        'address': request.POST.get('address'),
+                                                                        'city': request.POST.get('city'),
+                                                                        'postcode': request.POST.get('postcode')
+                                                                    })
+        context = {
+            'items': items,
+            'order': order,
+            'cart_items': cart_items,
+            'shipping_address': shipping_address
+        }
+        return render(request, 'store/checkout.html', context)
 
     context = {
         'items': items,
@@ -133,7 +147,7 @@ def product_details(request, pk):
     if request.method == 'POST':
         if request.user.is_authenticated:
             customer = request.user.customer
-            order, created = Order.objects.get_or_create(customer=customer, complete=False)
+            order, created = Order.objects.get_or_create(customer=customer, status='Not Paid')
             order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
             if not created:
                 order_item.quantity += 1
@@ -145,3 +159,55 @@ def product_details(request, pk):
     context = {'product': product}
 
     return render(request, 'store/product_detail.html', context)
+
+
+@login_required(login_url='login')
+@csrf_exempt
+def stripe_config(request):
+    if request.method == 'GET':
+        stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
+        return JsonResponse(stripe_config, safe=False)
+
+
+@login_required(login_url='login')
+@csrf_exempt
+def create_checkout_session(request):
+    order = Order.objects.get(customer=request.user.customer, status='Not Paid')
+    amount = int(order.get_cart_total * 100)
+    print(amount)
+    if request.method == 'GET':
+        domain_url = 'http://localhost:8000/'
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + 'cancelled/',
+                payment_method_types=['card'],
+                mode='payment',
+                line_items=[
+                    {
+                        'name': f'Your Order: #{order.id}',
+                        'quantity': 1,
+                        'currency': 'usd',
+                        'amount': amount,
+                    }
+                ]
+            )
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+
+@login_required(login_url='login')
+def success(request):
+    order = Order.objects.get(customer=request.user.customer, status='Not Paid')
+    order.status = 'Paid'
+    order.save()
+    messages.success(request, 'Your payment succeeded')
+    return redirect('store')
+
+
+@login_required(login_url='login')
+def cancelled(request):
+    messages.error(request, 'Your payment was cancelled.')
+    return redirect('cart')

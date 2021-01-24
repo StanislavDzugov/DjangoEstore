@@ -24,14 +24,14 @@
 						</div>
 					</div>
 					<hr>
-					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+					<input id="from-button" class="btn btn-primary btn-block" type="submit" value="Save">
 				</form>
+                {% if shipping_address %}
+              <button style="margin-top: 10px" class="btn btn-success" id="submitBtn">Purchase!</button>
+                    {% endif %}
 			</div>
             {% endif %}
 			<br>
-			<div class="box-element" id="payment-info">
-				<small>Payment Options</small>
-			</div>
 
 		</div>
 
